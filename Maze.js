@@ -1,11 +1,10 @@
-import GridMaker from "./GridMaker";
+import GridMaker from "./GridMaker.js";
 
 export default class Maze {
     constructor(length,height){
         this.length = length;
         this.height = height;
-        this.mazeState = [...Array(length)].map(outter => [...Array(height)].map(inner => 'X'));
-        this.grid = new GridMaker(length, height, document.getElementById('container'));
+        this.grid = new GridMaker(length, height);
         this.grid.drawGrid();
     }
     shuffle(array) {
@@ -34,48 +33,57 @@ export default class Maze {
     }
 
     generateRandomMaze(){
-        this.fillMaze(0,0);
-    }
+        //stack representing the list of directions taken to get to current postion
+        let x1 = 0, y1 = 0;
+        let x2,y2;
+        let stack = []
+        let mazeState = this.grid.grid;
+        //take the inital first step
+        let neighbors;
+        let count = 1;
 
-    fillMaze(x,y){
-        m.printMaze();
-        console.log('---------->');
-        this.mazeState[x][y] = '1';
-        let potentialVisit = this.shuffle(this.getValidNeighbor(x,y));
-        if (potentialVisit.length == 0){
-            return;
-        }
-        //set this position to be viisted
-        potentialVisit.forEach(neighbor => {
-            let xCord = neighbor[0]
-            let yCord = neighbor[1]
-            if(this.mazeState[xCord][yCord]  == 'X'){
-                this.fillMaze(xCord,yCord)
-            }
-        });
+            do{
+                //console.log('x1: ' + x1 + ' y1: ' + y1);
+                mazeState[x1][y1] = 'v'
+                neighbors = this.shuffle(this.getValidNeighbor(x1, y1, mazeState));
+                //console.log('Neighbors: ' , neighbors);
+                //if there is nowhere else to go then backtrack
+                if (neighbors.length == 0){
+                    let previousPos = stack.pop();
+                    //console.log('stack: ',stack);
+                    x1 = previousPos[0]
+                    y1 = previousPos[1]
+                } else{
+                    x2 = neighbors[0][0]
+                    y2 = neighbors[0][1]
+                    this.grid.openWall(x1,y1,x2,y2);
+                    x1 = x2;
+                    y1 = y2
+                    
+                    stack.push([x1,y1])
+                }
+                count++;
+            } while(stack.length > 0);
     }
 
     //generates list of neighbors that are within bound
-    getValidNeighbor(x,y){
+        getValidNeighbor(x, y, mazeState){
         let possibleDirection = [];
         //if top is within bounds
-        if(this.withinBounds(x,y-1)){
+        if(this.withinBounds(x,y-1) && mazeState[x][y-1] == '*'){
             possibleDirection.push([x, y-1])
         }
         //if left is within bounds
-        if(this.withinBounds(x-1,y)){
+        if(this.withinBounds(x-1,y) && mazeState[x-1][y] == '*'){
             possibleDirection.push([x-1, y])
         }
         //if bottom is within bounds
-        if(this.withinBounds(x,y+1)){
+        if(this.withinBounds(x,y+1) && mazeState[x][y+1] == '*'){
             possibleDirection.push([x, y+1])
         }
         //if right is within bounds
-        if(this.withinBounds(x+1,y)){
+        if(this.withinBounds(x+1,y) && mazeState[x+1][y] == '*'){
             possibleDirection.push([x+1, y])
-        }
-        if (possibleDirection.length == 0){
-            return [];
         }
         return possibleDirection;
     }

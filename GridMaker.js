@@ -1,9 +1,9 @@
 export default class GridMaker{
-    constructor(length, height, container){
+    constructor(length, height){
         this.length = length;
         this.height = height;
-        this.container = container;
-        this.grid = [...Array(length)].map(x => [...Array(height)].map(x=>'x'))
+        this.container = document.getElementById('container');
+        this.grid = [...Array(length)].map(x => [...Array(height)].map(x=>'*'))
     }
 
      printGrid(){
@@ -27,10 +27,35 @@ export default class GridMaker{
         }
         let input = '';
         for (let i = 0; i < this.length; i++) {
-
             input += 'auto '
         }
-        console.log(input);
         this.container.style.gridTemplateColumns = input;
+    }
+    cordToNodeIndex(x,y){
+        return x + y*this.length;
+    }
+
+    openWall(x1,y1,x2,y2){
+        let cells = document.querySelectorAll('.cell');
+        //open top cell
+        if(y2-y1 == -1){
+            cells[this.cordToNodeIndex(x1,y1)].style.borderTop = 'None';
+            cells[this.cordToNodeIndex(x2,y2)].style.borderBottom = 'None';
+        }
+        //open bottom cell
+        if(y2-y1 == 1){
+            cells[this.cordToNodeIndex(x1,y1)].style.borderBottom = 'None';
+            cells[this.cordToNodeIndex(x2,y2)].style.borderTop = 'None';
+        }
+        //open left cell
+        if(x2-x1 == -1){
+            cells[this.cordToNodeIndex(x1,y1)].style.borderLeft = 'None';
+            cells[this.cordToNodeIndex(x2,y2)].style.borderRight = 'None';
+        }
+        //open left cell
+        if(x2-x1 == 1){
+            cells[this.cordToNodeIndex(x1,y1)].style.borderRight = 'None';
+            cells[this.cordToNodeIndex(x2,y2)].style.borderLeft = 'None';
+        }
     }
 }

@@ -1,5 +1,13 @@
-import GridMaker from "./GridMaker.js";
+import Maze from "./Maze.js";
 
-let gm = new GridMaker(8,8, document.getElementById('container'));
 
-gm.drawGrid();
+let m = new Maze(100,50);
+// m.grid.printGrid();
+// m.grid.grid[0][0] = 'v'
+// m.grid.grid[1][0] = 'v'
+// console.log('nieghbors: ' + m.getValidNeighbor(2,0,m.grid.grid).length);
+// m.grid.printGrid();
+
+
+m.generateRandomMaze();
+console.log('ended');
