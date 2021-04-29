@@ -1,5 +1,5 @@
-import GridMaker from "./GridMaker";
+import GridMaker from "./GridMaker.js";
 
-let gm = new GridMaker(3,2);
+let gm = new GridMaker(8,8, document.getElementById('container'));
 
-gm.printGrid();
+gm.drawGrid();

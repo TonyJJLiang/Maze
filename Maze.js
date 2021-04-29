@@ -1,8 +1,12 @@
+import GridMaker from "./GridMaker";
+
 export default class Maze {
     constructor(length,height){
         this.length = length;
         this.height = height;
-        this.mazeState = [...Array(length)].map(outter => [...Array(height)].map(inner => 'X'))
+        this.mazeState = [...Array(length)].map(outter => [...Array(height)].map(inner => 'X'));
+        this.grid = new GridMaker(length, height, document.getElementById('container'));
+        this.grid.drawGrid();
     }
     shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
