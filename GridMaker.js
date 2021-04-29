@@ -6,16 +6,6 @@ export default class GridMaker{
         this.grid = [...Array(length)].map(x => [...Array(height)].map(x=>'*'))
     }
 
-     printGrid(){
-        for (let y = 0; y < this.height; y++) {
-            let line = '';
-            for (let x = 0; x < this.length; x++) {
-                line += this.grid[x][y];
-            }
-            console.log(line);
-        }
-    }
-
     drawGrid(){
         let cell;
         for (let y = 0; y < this.height; y++) {
@@ -37,23 +27,17 @@ export default class GridMaker{
 
     openWall(x1,y1,x2,y2){
         let cells = document.querySelectorAll('.cell');
-        //open top cell
+        //open top bottom, left, or right wall of cell grid
         if(y2-y1 == -1){
             cells[this.cordToNodeIndex(x1,y1)].style.borderTop = 'None';
             cells[this.cordToNodeIndex(x2,y2)].style.borderBottom = 'None';
-        }
-        //open bottom cell
-        if(y2-y1 == 1){
+        } else if(y2-y1 == 1){
             cells[this.cordToNodeIndex(x1,y1)].style.borderBottom = 'None';
             cells[this.cordToNodeIndex(x2,y2)].style.borderTop = 'None';
-        }
-        //open left cell
-        if(x2-x1 == -1){
+        } else if(x2-x1 == -1){
             cells[this.cordToNodeIndex(x1,y1)].style.borderLeft = 'None';
             cells[this.cordToNodeIndex(x2,y2)].style.borderRight = 'None';
-        }
-        //open left cell
-        if(x2-x1 == 1){
+        } else if(x2-x1 == 1){
             cells[this.cordToNodeIndex(x1,y1)].style.borderRight = 'None';
             cells[this.cordToNodeIndex(x2,y2)].style.borderLeft = 'None';
         }

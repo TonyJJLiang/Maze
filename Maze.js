@@ -22,35 +22,18 @@ export default class Maze {
         return array;
     }
 
-    printMaze(){
-        for (let y = 0; y < this.mazeState.length; y++) {
-            let row = '';
-            for (let x = 0; x < this.mazeState[y].length; x++) {
-                row += this.mazeState[x][y];
-            }
-            console.log(row);
-        }
-    }
-
     generateRandomMaze(){
         //stack representing the list of directions taken to get to current postion
         let x1 = 0, y1 = 0;
         let x2,y2;
         let stack = []
         let mazeState = this.grid.grid;
-        //take the inital first step
         let neighbors;
-        let count = 1;
-
             do{
-                //console.log('x1: ' + x1 + ' y1: ' + y1);
                 mazeState[x1][y1] = 'v'
                 neighbors = this.shuffle(this.getValidNeighbor(x1, y1, mazeState));
-                //console.log('Neighbors: ' , neighbors);
-                //if there is nowhere else to go then backtrack
                 if (neighbors.length == 0){
                     let previousPos = stack.pop();
-                    //console.log('stack: ',stack);
                     x1 = previousPos[0]
                     y1 = previousPos[1]
                 } else{
@@ -59,29 +42,23 @@ export default class Maze {
                     this.grid.openWall(x1,y1,x2,y2);
                     x1 = x2;
                     y1 = y2
-                    
                     stack.push([x1,y1])
                 }
-                count++;
             } while(stack.length > 0);
     }
-
-    //generates list of neighbors that are within bound
+        //generates list of neighbors that are within bound
         getValidNeighbor(x, y, mazeState){
         let possibleDirection = [];
-        //if top is within bounds
+        // Check if neighbors are within bounds and visitable
         if(this.withinBounds(x,y-1) && mazeState[x][y-1] == '*'){
             possibleDirection.push([x, y-1])
         }
-        //if left is within bounds
         if(this.withinBounds(x-1,y) && mazeState[x-1][y] == '*'){
             possibleDirection.push([x-1, y])
         }
-        //if bottom is within bounds
         if(this.withinBounds(x,y+1) && mazeState[x][y+1] == '*'){
             possibleDirection.push([x, y+1])
         }
-        //if right is within bounds
         if(this.withinBounds(x+1,y) && mazeState[x+1][y] == '*'){
             possibleDirection.push([x+1, y])
         }
