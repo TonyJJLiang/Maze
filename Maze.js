@@ -66,7 +66,11 @@ export default class Maze {
         return possibleDirection;
     }
 
-    depthFirstSearch(){
+    delay(time){
+        return new Promise((res) => setTimeout(res,time))
+    }
+
+    async depthFirstSearch(){
 
         let endPos = [this.length-1,this.height-1];
         let startPos = [0,0];
@@ -81,7 +85,7 @@ export default class Maze {
             currPos = stack.pop();
             visited[currPos[0]][currPos[1]] = true;
             currentCell = this.cells[this.grid.cordToNodeIndex(currPos[0],currPos[1])]
-            this.changeCellColor(currentCell)
+            this.changeCellColor(currentCell,'rgb(255,255,255)')
 
             if(currPos[0] == endPos[0] && currPos[1] == endPos[1]){
                 return
@@ -94,18 +98,18 @@ export default class Maze {
                 stack.push([currPos[0] - 1, currPos[1]]);
             }
             if(window.getComputedStyle(currentCell).getPropertyValue('border-bottom').includes('0px') && !visited[currPos[0]][currPos[1] + 1]){
-                console.log('enter2');
                 stack.push([currPos[0], currPos[1] + 1]);
             }
             if(window.getComputedStyle(currentCell).getPropertyValue('border-right').includes('0px') && !visited[currPos[0] + 1][currPos[1]]){
-                console.log('enter3');
                 stack.push([currPos[0] + 1, currPos[1]]);
             }
+            await this.delay(10)
+            this.changeCellColor(currentCell,'rgb(65, 219, 230)')
         }
     }
 
-    changeCellColor(cell){
-        cell.style.backgroundColor = 'rgb(65, 219, 230)';
+    changeCellColor(cell, color){
+        cell.style.backgroundColor = color;
     }
     
     withinBounds(x,y){
